@@ -1,0 +1,55 @@
+body {
+  font-family: "Segoe UI", "Lucida Grande", Helvetica, Arial, "Microsoft YaHei", FreeSans, Arimo, "Droid Sans", "wenquanyi micro hei", "Hiragino Sans GB", "Hiragino Sans GB W3", Arial, sans-serif;
+}
+.fade-transition {
+  transition: opacity 0.3s ease;
+}
+.fade-enter,
+.fade-leave {
+  opacity: 0;
+}
+.box-footer button {
+  margin-left: 15px;
+}
+ul li {
+  list-style: none;
+}
+.form-horizontal .form-group {
+  margin-right: 0;
+  margin-left: 0;
+}
+.form-horizontal .form-group > .col-sm-3,
+.form-horizontal .form-group > .col-sm-4 {
+  margin-bottom: 12px;
+}
+.form-horizontal .control-label.text-left {
+  text-align: left;
+}
+.alert.top {
+  z-index: 9999 !important;
+}
+.left {
+  float: left;
+}
+.bread-header li {
+  float: left;
+  margin-right: 10px;
+}
+.bread-header li a,
+.bread-header li span {
+  margin: 0 10px 0 0;
+  font-size: 20px;
+}
+.content-header {
+  padding-bottom: 10px;
+}
+.img-receipt {
+  max-width: 200px;
+  max-height: 200px;
+  display: inline-block;
+  border: 1px solid #ddd;
+}
+.div-margin .dropdown-menu {
+  max-height: 165px;
+  overflow: auto;
+}

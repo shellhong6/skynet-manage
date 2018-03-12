@@ -1,0 +1,8 @@
+{
+  "script":"/data/node/node-server/monitor-manage/start.js",
+  "error_file":"/data/logs/node/monitor-manage-err.log",
+  "out_file":"/data/logs/node/monitor-manage-out.log",
+  "merge_logs":false,
+  "log_date_format":"YYYY-MM-DD HH:mm:ss",
+  "name": "monitor-manage-test"
+}

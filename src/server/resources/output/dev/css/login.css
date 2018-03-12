@@ -1,0 +1,90 @@
+html, body, p{
+  margin: 0;
+}
+html{
+  width: 100%;
+  height: 100%;
+}
+body{
+  background-color: black;
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.wrap{
+  font-size: 16px;
+  background: url(../images/login/bg.png) repeat;
+  width: 80%;
+  min-width: 460px;
+  max-width: 600px;
+  height: 200px;
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  bottom: 0;
+  border-radius: 5px;
+  margin: -100px auto 0;
+}
+.centerField{
+  position: relative;
+  padding-top: 56px;
+  width: 418px;
+  margin: 0 auto;
+}
+.centerField * {
+  vertical-align: middle;
+}
+.centerField section{
+  margin-bottom: 8px;
+}
+.inputField{
+  display: inline-block;
+  width: 310px;
+  height: 41px;
+  background: url('../images/login/btnFieldUp.png') no-repeat;
+}
+section:nth-child(2) .inputField{
+  background: url('../images/login/btnFieldDown.png') no-repeat;
+}
+.centerField label{
+  color: #adadad;
+  width: 80px;
+  display: inline-block;
+  text-align: right;
+}
+.centerField input{
+  color: white;
+  background-color: transparent;
+  width: 80%;
+  height: 41px;
+  line-height: 1;
+  border: 0;
+  outline: 0;
+  margin-left: 5px;
+}
+input:-webkit-autofill{
+  -webkit-box-shadow: 0 0 0px 50px #2b2b2b inset;
+  -webkit-text-fill-color: white;
+  padding: 0;
+  height: 37px;
+  margin-top: 2px;
+}
+.sureBtn{
+  position: absolute;
+  right: 0;
+  top:75px;
+  display: inline-block;
+  background: url('../images/login/sureBtnInactive.png') no-repeat;
+  width: 52px;
+  height: 51px;
+  cursor: pointer;
+}
+.sureBtn:hover, .sureBtn:active{
+  background: url('../images/login/sureBtnActive.png') no-repeat;
+}
+.error{
+  margin-top: 20px;
+  text-align: center;
+  color: #cc3232;
+}
