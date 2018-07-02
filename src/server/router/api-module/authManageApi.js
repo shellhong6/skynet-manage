@@ -3,7 +3,7 @@ const ApiUtil = require('./util.js');
 const Data = require('../../utils/data.js');
 const md5 = require('md5');
 
-Service.setOptions('occasional');
+
 
 module.exports = {
   dealAuthManage(data, name, state, reply){

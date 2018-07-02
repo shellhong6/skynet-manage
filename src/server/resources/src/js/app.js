@@ -32,6 +32,7 @@ import ProjectItem1 from './components/ProjectItem1.vue';
 import userManage from './components/userManage.vue';
 import projectManage from './components/projectManage.vue';
 import dbManage from './components/dbManage.vue';
+import coManage from './components/coManage.vue';
 import aggregateManage from './components/aggregateManage.vue';
 import configManage from './components/configManage.vue';
 
@@ -71,6 +72,9 @@ router.map({
     },
     '/db-manage': {//单个项目数据
         component: dbManage
+    },
+    '/co-manage': {//单个项目数据
+        component: coManage
     },
     '/aggregate-manage': {//单个项目数据
         component: aggregateManage

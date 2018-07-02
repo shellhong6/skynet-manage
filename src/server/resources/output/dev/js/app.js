@@ -106,11 +106,15 @@
 	
 	var _dbManage2 = _interopRequireDefault(_dbManage);
 	
-	var _aggregateManage = __webpack_require__(273);
+	var _coManage = __webpack_require__(273);
+	
+	var _coManage2 = _interopRequireDefault(_coManage);
+	
+	var _aggregateManage = __webpack_require__(276);
 	
 	var _aggregateManage2 = _interopRequireDefault(_aggregateManage);
 	
-	var _configManage = __webpack_require__(278);
+	var _configManage = __webpack_require__(281);
 	
 	var _configManage2 = _interopRequireDefault(_configManage);
 	
@@ -151,6 +155,9 @@
 	    },
 	    '/db-manage': {
 	        component: _dbManage2.default
+	    },
+	    '/co-manage': {
+	        component: _coManage2.default
 	    },
 	    '/aggregate-manage': {
 	        component: _aggregateManage2.default
@@ -15832,12 +15839,18 @@
 	var dbTableData = exports.dbTableData = function dbTableData(state) {
 	  return state.dataManage.dbTableData;
 	};
+	var coTableData = exports.coTableData = function coTableData(state) {
+	  return state.dataManage.coTableData;
+	};
 	var aggregateTableData = exports.aggregateTableData = function aggregateTableData(state) {
 	  return state.dataManage.aggregateTableData;
 	};
 	
 	var batchDbList = exports.batchDbList = function batchDbList(state) {
 	  return state.dataManage.dbTableData;
+	};
+	var batchCoList = exports.batchCoList = function batchCoList(state) {
+	  return state.dataManage.batchCoList;
 	};
 
 /***/ },
@@ -15849,7 +15862,7 @@
 	Object.defineProperty(exports, "__esModule", {
 	  value: true
 	});
-	exports.doAggregateDelete = exports.doAggregate = exports.batchDbDelete = exports.doDbDelete = exports.getQDbList = exports.getDbList = exports.getPages = exports.getRoles = exports.getConfigs = exports.getUsers = exports.doConfigAdd = exports.doUserAdd = exports.doProjectEdit = exports.doProjectDelete = exports.doConfigDelete = exports.doUserDelete = exports.doJsErrorSolve = exports.getBigMemoryTableData = exports.getSlowTimingTableData = exports.getJsErrorTableData = exports.getPv = exports.getResources = exports.getMemory = exports.getTimeLine = exports.getProjects = exports.getCode = exports.doLogout = exports.getUserInfo = exports.displaySuccess = exports.displayError = exports.getTreeView = undefined;
+	exports.doAggregateDelete = exports.doAggregate = exports.batchCoDelete = exports.batchDbDelete = exports.doCoDelete = exports.doDbDelete = exports.getQCoList = exports.getQDbList = exports.getCoList = exports.getDbList = exports.getPages = exports.getRoles = exports.getConfigs = exports.getUsers = exports.doConfigAdd = exports.doUserAdd = exports.doProjectEdit = exports.doProjectDelete = exports.doConfigDelete = exports.doUserDelete = exports.doJsErrorSolve = exports.getBigMemoryTableData = exports.getSlowTimingTableData = exports.getJsErrorTableData = exports.getPv = exports.getResources = exports.getMemory = exports.getTimeLine = exports.getProjects = exports.getCode = exports.doLogout = exports.getUserInfo = exports.displaySuccess = exports.displayError = exports.getTreeView = undefined;
 	
 	var _mutationTypes = __webpack_require__(36);
 	
@@ -16310,8 +16323,26 @@
 	    }
 	  }, true);
 	};
-	var getQDbList = exports.getQDbList = function getQDbList(_ref27, data, cb) {
+	var getCoList = exports.getCoList = function getCoList(_ref27, data) {
 	  var dispatch = _ref27.dispatch;
+	
+	  var url = '/api/co-manage/getCoList';
+	  (0, _api.fetch)(dispatch, {
+	    method: 'POST',
+	    data: data,
+	    url: url
+	  }, function (err, res) {
+	    if (!isErr(err, res, dispatch, url)) {
+	      var val = res.value;
+	      dispatch(types.GET_CO_LIST, {
+	        data: val
+	      });
+	      dispatchSuccess(res.message, dispatch);
+	    }
+	  }, true);
+	};
+	var getQDbList = exports.getQDbList = function getQDbList(_ref28, data, cb) {
+	  var dispatch = _ref28.dispatch;
 	
 	  var url = '/api/db-manage/getQDbList';
 	  (0, _api.fetch)(dispatch, {
@@ -16327,8 +16358,25 @@
 	    }
 	  }, true);
 	};
-	var doDbDelete = exports.doDbDelete = function doDbDelete(_ref28, data) {
-	  var dispatch = _ref28.dispatch;
+	var getQCoList = exports.getQCoList = function getQCoList(_ref29, data, cb) {
+	  var dispatch = _ref29.dispatch;
+	
+	  var url = '/api/co-manage/getQCoList';
+	  (0, _api.fetch)(dispatch, {
+	    method: 'POST',
+	    data: data,
+	    url: url
+	  }, function (err, res) {
+	    if (!isErr(err, res, dispatch, url)) {
+	      dispatch(types.BATCH_CO_LIST, {
+	        data: res.value
+	      });
+	      cb && cb(res.value);
+	    }
+	  }, true);
+	};
+	var doDbDelete = exports.doDbDelete = function doDbDelete(_ref30, data) {
+	  var dispatch = _ref30.dispatch;
 	
 	  var url = '/api/db-manage/doDbDelete';
 	  (0, _api.fetch)(dispatch, {
@@ -16352,8 +16400,29 @@
 	    }
 	  }, true);
 	};
-	var batchDbDelete = exports.batchDbDelete = function batchDbDelete(_ref29, data) {
-	  var dispatch = _ref29.dispatch;
+	var doCoDelete = exports.doCoDelete = function doCoDelete(_ref31, data) {
+	  var dispatch = _ref31.dispatch;
+	
+	  var url = '/api/co-manage/doCoDelete';
+	  (0, _api.fetch)(dispatch, {
+	    method: 'POST',
+	    data: { name: data.entry.name },
+	    url: url
+	  }, function (err, res) {
+	    if (!isErr(err, res, dispatch, url)) {
+	      var coTableData = data.coTableData;
+	      var entry = data.entry;
+	      dispatch(types.GET_CO_LIST, {
+	        data: coTableData.data.filter(function (item) {
+	          return item.name != entry.name;
+	        })
+	      });
+	      dispatchSuccess(res.message, dispatch);
+	    }
+	  }, true);
+	};
+	var batchDbDelete = exports.batchDbDelete = function batchDbDelete(_ref32, data) {
+	  var dispatch = _ref32.dispatch;
 	
 	  var url = '/api/db-manage/batchDbDelete';
 	  (0, _api.fetch)(dispatch, {
@@ -16380,8 +16449,28 @@
 	    }
 	  }, true);
 	};
-	var doAggregate = exports.doAggregate = function doAggregate(_ref30, data) {
-	  var dispatch = _ref30.dispatch;
+	var batchCoDelete = exports.batchCoDelete = function batchCoDelete(_ref33, data) {
+	  var dispatch = _ref33.dispatch;
+	
+	  var url = '/api/co-manage/batchCoDelete';
+	  (0, _api.fetch)(dispatch, {
+	    method: 'POST',
+	    data: { query: data.query },
+	    url: url
+	  }, function (err, res) {
+	    if (!isErr(err, res, dispatch, url)) {
+	      var coTableData = data.coTableData;
+	      dispatch(types.GET_CO_LIST, {
+	        data: coTableData.data.filter(function (item) {
+	          return data.query.indexOf(item.name) == -1;
+	        })
+	      });
+	      dispatchSuccess(res.message, dispatch);
+	    }
+	  }, true);
+	};
+	var doAggregate = exports.doAggregate = function doAggregate(_ref34, data) {
+	  var dispatch = _ref34.dispatch;
 	
 	  var url = '/api/aggregate-manage/doAggregate';
 	  (0, _api.fetch)(dispatch, {
@@ -16395,8 +16484,8 @@
 	    }
 	  }, true);
 	};
-	var doAggregateDelete = exports.doAggregateDelete = function doAggregateDelete(_ref31, data) {
-	  var dispatch = _ref31.dispatch;
+	var doAggregateDelete = exports.doAggregateDelete = function doAggregateDelete(_ref35, data) {
+	  var dispatch = _ref35.dispatch;
 	
 	  var url = '/api/aggregate-manage/doAggregateDelete';
 	  var aggregateTableData = data.aggregateTableData;
@@ -16465,6 +16554,9 @@
 	var GET_DB_LIST = exports.GET_DB_LIST = 'GET_DB_LIST';
 	var BATCH_DB_LIST = exports.BATCH_DB_LIST = 'BATCH_DB_LIST';
 	var DO_AGGREGATE = exports.DO_AGGREGATE = 'DO_AGGREGATE';
+	
+	var GET_CO_LIST = exports.GET_CO_LIST = 'GET_CO_LIST';
+	var BATCH_CO_LIST = exports.BATCH_CO_LIST = 'BATCH_CO_LIST';
 
 /***/ },
 /* 37 */
@@ -28508,14 +28600,20 @@
 	    link: ''
 	  },
 	  dbTableData: [],
+	  coTableData: [],
 	  aggregateTableData: [],
-	  batchDbList: []
+	  batchDbList: [],
+	  batchCoList: []
 	};
 	
 	var mutations = (_mutations = {}, (0, _defineProperty3.default)(_mutations, _mutationTypes.GET_CODE_STATUS, function (state, value) {
 	  state.jscode = value;
 	}), (0, _defineProperty3.default)(_mutations, _mutationTypes.GET_DB_LIST, function (state, value) {
 	  state.dbTableData = value;
+	}), (0, _defineProperty3.default)(_mutations, _mutationTypes.BATCH_CO_LIST, function (state, value) {
+	  state.batchCoList = value;
+	}), (0, _defineProperty3.default)(_mutations, _mutationTypes.GET_CO_LIST, function (state, value) {
+	  state.coTableData = value;
 	}), (0, _defineProperty3.default)(_mutations, _mutationTypes.BATCH_DB_LIST, function (state, value) {
 	  state.batchDbList = value;
 	}), (0, _defineProperty3.default)(_mutations, _mutationTypes.DO_AGGREGATE, function (state, value) {
@@ -28822,7 +28920,7 @@
 	
 	
 	// module
-	exports.push([module.id, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.welcome {\n  text-align: center;\n  font-size: 24px;\n  height: 400px;\n  line-height: 400px;\n}\n", "", {"version":3,"sources":["/./src/js/components/Blank.vue?e70be4be"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AA8EA;EACA,mBAAA;EACA,gBAAA;EACA,cAAA;EACA,mBAAA;CACA","file":"Blank.vue","sourcesContent":["<template>\n  <div>\n    <section class=\"content\">\n      <box class=\"doReportField\">\n        <span slot=\"title\">个性化上报(doReport)</span>\n        <div slot=\"body\">\n          <pre>\n            <code></code>\n          </pre>\n        </div>\n      </box>\n      <box class=\"doAndroidReportField\">\n        <span slot=\"title\">客户端异常处理(doAndroidReport)</span>\n        <div slot=\"body\">\n          <pre>\n            <code></code>\n          </pre>\n        </div>\n      </box>\n    </section>\n  </div>\n</template>\n\n<script>\n  import { userInfo } from '../vuex/getters';\n  import Box from '../plugins/Box.vue';\n\n  export default {\n    name: 'Blank',\n    components: {\n      Box\n    },\n    vuex: {\n      getters: {\n        userInfo\n      }\n    },\n\n    data() {\n      return {\n      }\n    },\n    attached() {\n      var doReportField = document.querySelector('.doReportField pre code');\n      doReportField.innerHTML = `\n        //当已经引入了skynet.js的情况下，可定义以下方法，用于个性化上报\n        doReport(baseInfo, otherInfo) {\n          var monitor = window._MONITOR;\n          if(monitor && monitor.doReport){\n            monitor.doReport({\n              \"baseInfo\": baseInfo, //字符串（可为空字符串），一般用于存放类型；例如监听接口a.do的失败情况，baseInfo=\"a.do_error\"\n              \"otherInfo\": otherInfo //字符串（可为空字符串），一般用于存放具体数据；例如监听接口a.do的失败情况，otherInfo可用于存放网络情况或参数等\n            });\n          }\n        }\n      `;\n      hljs.highlightBlock(doReportField);\n      var doAndroidReportField = document.querySelector('.doAndroidReportField pre code');\n      doAndroidReportField.innerHTML = `\n        //当已经引入了skynet.js的情况下，客户端异常通过以下方式上报\n        try {\n          //客户端api调用\n        } catch (err) {\n          var monitor = window._MONITOR;\n          if(monitor && monitor.doAndroidReport){\n            monitor.doAndroidReport(\n              err,\n              'apiName'//客户端方法名称，根据需要进行修改\n            );\n          }\n        }\n      `;\n      hljs.highlightBlock(doAndroidReportField);\n    }\n  }\n</script>\n\n<style>\n  .welcome {\n    text-align: center;\n    font-size: 24px;\n    height: 400px;\n    line-height: 400px;\n  }\n</style>\n"],"sourceRoot":"webpack://"}]);
+	exports.push([module.id, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n.welcome {\n  text-align: center;\n  font-size: 24px;\n  height: 400px;\n  line-height: 400px;\n}\n", "", {"version":3,"sources":["/./src/js/components/Blank.vue?0aaff686"],"names":[],"mappings":";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;AA2HA;EACA,mBAAA;EACA,gBAAA;EACA,cAAA;EACA,mBAAA;CACA","file":"Blank.vue","sourcesContent":["<template>\n  <div>\n    <section class=\"content\">\n      <box class=\"doReportField\">\n        <span slot=\"title\">个性化上报(doReport)</span>\n        <div slot=\"body\">\n          <pre>\n            <code></code>\n          </pre>\n        </div>\n      </box>\n      <box class=\"doAndroidReportField\">\n        <span slot=\"title\">客户端异常处理(doAndroidReport)</span>\n        <div slot=\"body\">\n          <pre>\n            <code></code>\n          </pre>\n        </div>\n      </box>\n      <box class=\"doWarnReportField\">\n        <span slot=\"title\">带钉钉通知的严重问题报警(doWarnReport)</span>\n        <div slot=\"body\">\n          <pre>\n            <code></code>\n          </pre>\n        </div>\n      </box>\n      <box class=\"importVcField\">\n        <span slot=\"title\">根据授权imei，引入vConsole功能js</span>\n        <div slot=\"body\">\n          <pre>\n            <code></code>\n          </pre>\n        </div>\n      </box>\n    </section>\n  </div>\n</template>\n\n<script>\n  import { userInfo } from '../vuex/getters';\n  import Box from '../plugins/Box.vue';\n\n  export default {\n    name: 'Blank',\n    components: {\n      Box\n    },\n    vuex: {\n      getters: {\n        userInfo\n      }\n    },\n\n    data() {\n      return {\n      }\n    },\n    attached() {\n      var doReportField = document.querySelector('.doReportField pre code');\n      doReportField.innerHTML = `\n        //当已经引入了skynet.js的情况下，可定义以下方法，用于个性化上报\n        doReport(baseInfo, otherInfo) {\n          var monitor = window._MONITOR;\n          if(monitor && monitor.doReport){\n            monitor.doReport({\n              \"baseInfo\": baseInfo, //字符串（可为空字符串），一般用于存放类型；例如监听接口a.do的失败情况，baseInfo=\"a.do_error\"\n              \"otherInfo\": otherInfo //字符串（可为空字符串），一般用于存放具体数据；例如监听接口a.do的失败情况，otherInfo可用于存放网络情况或参数等\n            });\n          }\n        }\n      `;\n      hljs.highlightBlock(doReportField);\n\n      var doAndroidReportField = document.querySelector('.doAndroidReportField pre code');\n      doAndroidReportField.innerHTML = `\n        //当已经引入了skynet.js的情况下，客户端异常通过以下方式上报\n        try {\n          //客户端api调用\n        } catch (err) {\n          var monitor = window._MONITOR;\n          if(monitor && monitor.doAndroidReport){\n            monitor.doAndroidReport(\n              err,\n              'apiName'//客户端方法名称，根据需要进行修改\n            );\n          }\n        }\n      `;\n      hljs.highlightBlock(doAndroidReportField);\n\n      var doWarnReportField = document.querySelector('.doWarnReportField pre code');\n      doWarnReportField.innerHTML = `\n        //当已经引入了skynet.js的情况下，通过以下方式实现报警功能\n        doWarnReport(type, detail) {\n          var monitor = window._MONITOR;\n          if(monitor && monitor.doWarnReport){\n            monitor.doWarnReport(\n              \"cpd-error\", //字符串，用于存放报警类型，同一类型的报警请保持此字段值的一致性\n              \"install-code-0\"//字符串（可为空字符串），一般用于存放报警具体异常情况和相关数据\n            );\n          }\n        }\n      `;\n      hljs.highlightBlock(doWarnReportField);\n\n      var importVcField = document.querySelector('.importVcField pre code');\n      importVcField.innerHTML = `\n        //根据授权imei，引入vconsole功能js；代码中，已经new了一个全局的vConsole对象\n        importVc() {\n          var imei = window.getImei && window.getImei() || ''; //此处依赖于skynet.js，如为引入该js，自行改写\n          var scriptEl = document.createElement('script');\n          scriptEl.setAttribute('src', \\`//skynet.meizu.com/meizu_get_vc_js?imei=$\\{imei\\}\\`);\n          scriptEl.setAttribute('type', \\`text/javascript\\`);\n          document.body.appendChild(scriptEl);\n        }\n      `;\n      hljs.highlightBlock(importVcField);\n    }\n  }\n</script>\n\n<style>\n  .welcome {\n    text-align: center;\n    font-size: 24px;\n    height: 400px;\n    line-height: 400px;\n  }\n</style>\n"],"sourceRoot":"webpack://"}]);
 	
 	// exports
 
@@ -28863,9 +28961,18 @@
 	    var doReportField = document.querySelector('.doReportField pre code');
 	    doReportField.innerHTML = '\n      //\u5F53\u5DF2\u7ECF\u5F15\u5165\u4E86skynet.js\u7684\u60C5\u51B5\u4E0B\uFF0C\u53EF\u5B9A\u4E49\u4EE5\u4E0B\u65B9\u6CD5\uFF0C\u7528\u4E8E\u4E2A\u6027\u5316\u4E0A\u62A5\n      doReport(baseInfo, otherInfo) {\n        var monitor = window._MONITOR;\n        if(monitor && monitor.doReport){\n          monitor.doReport({\n            "baseInfo": baseInfo, //\u5B57\u7B26\u4E32\uFF08\u53EF\u4E3A\u7A7A\u5B57\u7B26\u4E32\uFF09\uFF0C\u4E00\u822C\u7528\u4E8E\u5B58\u653E\u7C7B\u578B\uFF1B\u4F8B\u5982\u76D1\u542C\u63A5\u53E3a.do\u7684\u5931\u8D25\u60C5\u51B5\uFF0CbaseInfo="a.do_error"\n            "otherInfo": otherInfo //\u5B57\u7B26\u4E32\uFF08\u53EF\u4E3A\u7A7A\u5B57\u7B26\u4E32\uFF09\uFF0C\u4E00\u822C\u7528\u4E8E\u5B58\u653E\u5177\u4F53\u6570\u636E\uFF1B\u4F8B\u5982\u76D1\u542C\u63A5\u53E3a.do\u7684\u5931\u8D25\u60C5\u51B5\uFF0CotherInfo\u53EF\u7528\u4E8E\u5B58\u653E\u7F51\u7EDC\u60C5\u51B5\u6216\u53C2\u6570\u7B49\n          });\n        }\n      }\n    ';
 	    hljs.highlightBlock(doReportField);
+	
 	    var doAndroidReportField = document.querySelector('.doAndroidReportField pre code');
 	    doAndroidReportField.innerHTML = '\n      //\u5F53\u5DF2\u7ECF\u5F15\u5165\u4E86skynet.js\u7684\u60C5\u51B5\u4E0B\uFF0C\u5BA2\u6237\u7AEF\u5F02\u5E38\u901A\u8FC7\u4EE5\u4E0B\u65B9\u5F0F\u4E0A\u62A5\n      try {\n        //\u5BA2\u6237\u7AEFapi\u8C03\u7528\n      } catch (err) {\n        var monitor = window._MONITOR;\n        if(monitor && monitor.doAndroidReport){\n          monitor.doAndroidReport(\n            err,\n            \'apiName\'//\u5BA2\u6237\u7AEF\u65B9\u6CD5\u540D\u79F0\uFF0C\u6839\u636E\u9700\u8981\u8FDB\u884C\u4FEE\u6539\n          );\n        }\n      }\n    ';
 	    hljs.highlightBlock(doAndroidReportField);
+	
+	    var doWarnReportField = document.querySelector('.doWarnReportField pre code');
+	    doWarnReportField.innerHTML = '\n      //\u5F53\u5DF2\u7ECF\u5F15\u5165\u4E86skynet.js\u7684\u60C5\u51B5\u4E0B\uFF0C\u901A\u8FC7\u4EE5\u4E0B\u65B9\u5F0F\u5B9E\u73B0\u62A5\u8B66\u529F\u80FD\n      doWarnReport(type, detail) {\n        var monitor = window._MONITOR;\n        if(monitor && monitor.doWarnReport){\n          monitor.doWarnReport(\n            "cpd-error", //\u5B57\u7B26\u4E32\uFF0C\u7528\u4E8E\u5B58\u653E\u62A5\u8B66\u7C7B\u578B\uFF0C\u540C\u4E00\u7C7B\u578B\u7684\u62A5\u8B66\u8BF7\u4FDD\u6301\u6B64\u5B57\u6BB5\u503C\u7684\u4E00\u81F4\u6027\n            "install-code-0"//\u5B57\u7B26\u4E32\uFF08\u53EF\u4E3A\u7A7A\u5B57\u7B26\u4E32\uFF09\uFF0C\u4E00\u822C\u7528\u4E8E\u5B58\u653E\u62A5\u8B66\u5177\u4F53\u5F02\u5E38\u60C5\u51B5\u548C\u76F8\u5173\u6570\u636E\n          );\n        }\n      }\n    ';
+	    hljs.highlightBlock(doWarnReportField);
+	
+	    var importVcField = document.querySelector('.importVcField pre code');
+	    importVcField.innerHTML = '\n      //\u6839\u636E\u6388\u6743imei\uFF0C\u5F15\u5165vconsole\u529F\u80FDjs\uFF1B\u4EE3\u7801\u4E2D\uFF0C\u5DF2\u7ECFnew\u4E86\u4E00\u4E2A\u5168\u5C40\u7684vConsole\u5BF9\u8C61\n      importVc() {\n        var imei = window.getImei && window.getImei() || \'\'; //\u6B64\u5904\u4F9D\u8D56\u4E8Eskynet.js\uFF0C\u5982\u4E3A\u5F15\u5165\u8BE5js\uFF0C\u81EA\u884C\u6539\u5199\n        var scriptEl = document.createElement(\'script\');\n        scriptEl.setAttribute(\'src\', `//skynet.meizu.com/meizu_get_vc_js?imei=${imei}`);\n        scriptEl.setAttribute(\'type\', `text/javascript`);\n        document.body.appendChild(scriptEl);\n      }\n    ';
+	    hljs.highlightBlock(importVcField);
 	  }
 	};
 
@@ -28984,7 +29091,7 @@
 /* 113 */
 /***/ function(module, exports) {
 
-	module.exports = "\n<div>\n  <section class=\"content\">\n    <box class=\"doReportField\">\n      <span slot=\"title\">个性化上报(doReport)</span>\n      <div slot=\"body\">\n        <pre>\n          <code></code>\n        </pre>\n      </div>\n    </box>\n    <box class=\"doAndroidReportField\">\n      <span slot=\"title\">客户端异常处理(doAndroidReport)</span>\n      <div slot=\"body\">\n        <pre>\n          <code></code>\n        </pre>\n      </div>\n    </box>\n  </section>\n</div>\n";
+	module.exports = "\n<div>\n  <section class=\"content\">\n    <box class=\"doReportField\">\n      <span slot=\"title\">个性化上报(doReport)</span>\n      <div slot=\"body\">\n        <pre>\n          <code></code>\n        </pre>\n      </div>\n    </box>\n    <box class=\"doAndroidReportField\">\n      <span slot=\"title\">客户端异常处理(doAndroidReport)</span>\n      <div slot=\"body\">\n        <pre>\n          <code></code>\n        </pre>\n      </div>\n    </box>\n    <box class=\"doWarnReportField\">\n      <span slot=\"title\">带钉钉通知的严重问题报警(doWarnReport)</span>\n      <div slot=\"body\">\n        <pre>\n          <code></code>\n        </pre>\n      </div>\n    </box>\n    <box class=\"importVcField\">\n      <span slot=\"title\">根据授权imei，引入vConsole功能js</span>\n      <div slot=\"body\">\n        <pre>\n          <code></code>\n        </pre>\n      </div>\n    </box>\n  </section>\n</div>\n";
 
 /***/ },
 /* 114 */
@@ -46791,13 +46898,242 @@
 
 	var __vue_script__, __vue_template__
 	var __vue_styles__ = {}
-	__webpack_require__(274)
-	__vue_script__ = __webpack_require__(276)
+	__vue_script__ = __webpack_require__(274)
+	if (__vue_script__ &&
+	    __vue_script__.__esModule &&
+	    Object.keys(__vue_script__).length > 1) {
+	  console.warn("[vue-loader] src/js/components/coManage.vue: named exports in *.vue files are ignored.")}
+	__vue_template__ = __webpack_require__(275)
+	module.exports = __vue_script__ || {}
+	if (module.exports.__esModule) module.exports = module.exports.default
+	var __vue_options__ = typeof module.exports === "function" ? (module.exports.options || (module.exports.options = {})) : module.exports
+	if (__vue_template__) {
+	__vue_options__.template = __vue_template__
+	}
+	if (!__vue_options__.computed) __vue_options__.computed = {}
+	Object.keys(__vue_styles__).forEach(function (key) {
+	var module = __vue_styles__[key]
+	__vue_options__.computed[key] = function () { return module }
+	})
+	if (false) {(function () {  module.hot.accept()
+	  var hotAPI = require("vue-hot-reload-api")
+	  hotAPI.install(require("vue"), false)
+	  if (!hotAPI.compatible) return
+	  var id = "_v-225a7ce8/coManage.vue"
+	  if (!module.hot.data) {
+	    hotAPI.createRecord(id, module.exports)
+	  } else {
+	    hotAPI.update(id, module.exports, __vue_template__)
+	  }
+	})()}
+
+/***/ },
+/* 274 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _FormBox = __webpack_require__(118);
+	
+	var _FormBox2 = _interopRequireDefault(_FormBox);
+	
+	var _Box = __webpack_require__(108);
+	
+	var _Box2 = _interopRequireDefault(_Box);
+	
+	var _Chart = __webpack_require__(244);
+	
+	var _Chart2 = _interopRequireDefault(_Chart);
+	
+	var _baseUtil = __webpack_require__(81);
+	
+	var _baseUtil2 = _interopRequireDefault(_baseUtil);
+	
+	var _DataTable = __webpack_require__(250);
+	
+	var _DataTable2 = _interopRequireDefault(_DataTable);
+	
+	var _actions = __webpack_require__(35);
+	
+	var _getters = __webpack_require__(34);
+	
+	var _vueStrap = __webpack_require__(86);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	exports.default = {
+	  name: 'coManage',
+	
+	  components: {
+	    Box: _Box2.default,
+	    modal: _vueStrap.modal,
+	    alert: alert,
+	    DataTable: _DataTable2.default,
+	    formGroup: _vueStrap.formGroup,
+	    FormBox: _FormBox2.default
+	  },
+	
+	  vuex: {
+	    getters: {
+	      coTableData: _getters.coTableData,
+	      batchCoList: _getters.batchCoList
+	    },
+	    actions: {
+	      getCoList: _actions.getCoList,
+	      getQCoList: _actions.getQCoList,
+	      doCoDelete: _actions.doCoDelete,
+	      batchCoDelete: _actions.batchCoDelete
+	    }
+	  },
+	
+	  data: function data() {
+	    return {
+	      coTable: {
+	        columns: [{ title: '名称', key: 'name' }, { title: '记录条数', key: 'count' }],
+	
+	        opts: [{ title: '删除', key: '_id', type: 'delete' }],
+	
+	        rowClick: function rowClick(entry, extend) {},
+	
+	        dataExtend: {}
+	      },
+	      form: {
+	        title: '集合处理',
+	        fields: [{ title: '关键字', name: 'query', type: 'text' }]
+	      },
+	      bodybtns: [{
+	        type: 'delete_type',
+	        text: '批量删除',
+	        className: 'btn-primary'
+	      }],
+	      modal: {
+	        message: '',
+	        show: false,
+	        sureText: '确定',
+	        cancelText: '取消',
+	        id: '',
+	        action: '',
+	        type: 'add_user'
+	      }
+	    };
+	  },
+	
+	
+	  events: {
+	    'datatable:operate': function datatableOperate(type, key, entry) {
+	      switch (type) {
+	        case 'delete':
+	          this.clickDelete(entry);
+	          break;
+	        default:
+	
+	      }
+	    },
+	    'buttons:trigger': function buttonsTrigger(type, $el, params) {
+	      var _this = this;
+	
+	      if (type == 'delete_type') {
+	        var val = this.form.fields[0].value;
+	        if (val) {
+	          this.getQCoList({
+	            query: val
+	          }, function (list) {
+	            if (list && list.length) {
+	              _this.clickBatchDelete(list);
+	            }
+	          });
+	        } else {}
+	      }
+	    }
+	  },
+	
+	  watch: {},
+	
+	  methods: {
+	    clickDelete: function clickDelete(entry) {
+	      this.showModal('\u786E\u5B9A\u5220\u9664\u96C6\u5408\uFF08' + entry.name + '\uFF09\u5417\uFF1F', 'delete', entry, 'alert');
+	    },
+	    clickBatchDelete: function clickBatchDelete(entry) {
+	      var query = entry.join(',');
+	      this.showModal('\u786E\u5B9A\u6279\u91CF\u5220\u9664\u96C6\u5408\uFF08' + query + '\uFF09\u5417\uFF1F', 'batch-delete', {
+	        list: entry,
+	        query: query
+	      }, 'alert');
+	    },
+	    doSure: function doSure() {
+	      var name = _baseUtil2.default.getUrlParam('name');
+	      switch (this.modal.action) {
+	        case 'delete':
+	          this.doCoDelete({
+	            entry: this.modal.entry,
+	            coTableData: this.coTableData
+	          });
+	          break;
+	        case 'batch-delete':
+	          this.batchCoDelete({
+	            query: this.modal.entry.query,
+	            entry: this.modal.entry.list,
+	            coTableData: this.coTableData
+	          });
+	          break;
+	        default:
+	
+	      }
+	      this.modal.show = false;
+	    },
+	    showModal: function showModal(mes, action, entry, type) {
+	      switch (action) {
+	        case 'delete':
+	          this.modal.message = mes;
+	          this.modal.entry = entry;
+	          this.modal.coTableData = _getters.coTableData;
+	          break;
+	        case 'batch-delete':
+	          this.modal.message = mes;
+	          this.modal.entry = entry;
+	          this.modal.coTableData = _getters.coTableData;
+	          break;
+	        default:
+	
+	      }
+	      this.modal.show = true;
+	      this.modal.type = type;
+	      this.modal.action = action;
+	    }
+	  },
+	
+	  route: {
+	    data: function data() {}
+	  },
+	
+	  created: function created() {
+	    this.getCoList();
+	  }
+	};
+
+/***/ },
+/* 275 */
+/***/ function(module, exports) {
+
+	module.exports = "\n<div>\n  <section class=\"content-header\">\n  </section>\n  <section class=\"content\">\n    <form-box :form=\"form\" :buttons=\"buttons\" :bodybtns=\"bodybtns\"></form-box>\n    <box>\n      <div slot=\"body\">\n        <data-table\n          :columns=\"coTable.columns\"\n          :data=\"coTableData.data\"\n          :data-extend=\"coTable.dataExtend\"\n          :opts=\"coTable.opts\"\n          :row-click=\"coTable.rowClick\">\n        </data-table>\n      </div>\n    </box>\n  </section>\n  <modal :show.sync=\"modal.show\" effect=\"fade\" width=\"400\">\n    <div slot=\"modal-header\" class=\"modal-header\">\n      <h4 class=\"modal-title\">\n        {{modal.title}}\n      </h4>\n    </div>\n    <div slot=\"modal-body\" class=\"modal-body\">\n      <template v-if='modal.type==\"alert\"'>\n        {{modal.message}}\n      </template>\n    </div>\n    <div slot=\"modal-footer\" class=\"modal-footer\">\n      <button type=\"button\" class=\"btn btn-default\" @click=\"modal.show = false\">{{modal.cancelText || '取消'}}</button>\n      <button type=\"button\" class=\"btn btn-success\" @click=\"doSure\">{{modal.sureText || '确定'}}</button>\n    </div>\n  </modal>\n\n</div>\n";
+
+/***/ },
+/* 276 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __vue_script__, __vue_template__
+	var __vue_styles__ = {}
+	__webpack_require__(277)
+	__vue_script__ = __webpack_require__(279)
 	if (__vue_script__ &&
 	    __vue_script__.__esModule &&
 	    Object.keys(__vue_script__).length > 1) {
 	  console.warn("[vue-loader] src/js/components/aggregateManage.vue: named exports in *.vue files are ignored.")}
-	__vue_template__ = __webpack_require__(277)
+	__vue_template__ = __webpack_require__(280)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
 	var __vue_options__ = typeof module.exports === "function" ? (module.exports.options || (module.exports.options = {})) : module.exports
@@ -46822,13 +47158,13 @@
 	})()}
 
 /***/ },
-/* 274 */
+/* 277 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(275);
+	var content = __webpack_require__(278);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(32)(content, {});
@@ -46848,7 +47184,7 @@
 	}
 
 /***/ },
-/* 275 */
+/* 278 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(31)();
@@ -46862,7 +47198,7 @@
 
 
 /***/ },
-/* 276 */
+/* 279 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47131,23 +47467,23 @@
 	};
 
 /***/ },
-/* 277 */
+/* 280 */
 /***/ function(module, exports) {
 
 	module.exports = "\n<div>\n  <section class=\"content\">\n    <form-box :form=\"form\" :buttons=\"buttons\" :bodybtns=\"bodybtns\"></form-box>\n    <box>\n      <span slot=\"title\">数据生成</span>\n      <div slot=\"body\">\n        <data-table\n          :columns=\"aggregateTable.columns\"\n          :data=\"aggregateTableData\"\n          :data-extend=\"aggregateTable.dataExtend\"\n          :opts=\"aggregateTable.opts\"\n          :row-click=\"aggregateTable.rowClick\">\n        </data-table>\n      </div>\n    </box>\n  </section>\n\n  <modal :show.sync=\"modal.show\" effect=\"fade\" width=\"400\">\n    <div slot=\"modal-header\" class=\"modal-header\">\n      <h4 class=\"modal-title\">\n        {{modal.title}}\n      </h4>\n    </div>\n    <div slot=\"modal-body\" class=\"modal-body\">\n      <template v-if='modal.type==\"alert\"'>\n        {{modal.message}}\n      </template>\n    </div>\n    <div slot=\"modal-footer\" class=\"modal-footer\">\n      <button type=\"button\" class=\"btn btn-default\" @click=\"modal.show = false\">{{modal.cancelText || '取消'}}</button>\n      <button type=\"button\" class=\"btn btn-success\" @click=\"doSure\">{{modal.sureText || '确定'}}</button>\n    </div>\n  </modal>\n</div>\n";
 
 /***/ },
-/* 278 */
+/* 281 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __vue_script__, __vue_template__
 	var __vue_styles__ = {}
-	__vue_script__ = __webpack_require__(279)
+	__vue_script__ = __webpack_require__(282)
 	if (__vue_script__ &&
 	    __vue_script__.__esModule &&
 	    Object.keys(__vue_script__).length > 1) {
 	  console.warn("[vue-loader] src/js/components/configManage.vue: named exports in *.vue files are ignored.")}
-	__vue_template__ = __webpack_require__(280)
+	__vue_template__ = __webpack_require__(283)
 	module.exports = __vue_script__ || {}
 	if (module.exports.__esModule) module.exports = module.exports.default
 	var __vue_options__ = typeof module.exports === "function" ? (module.exports.options || (module.exports.options = {})) : module.exports
@@ -47172,7 +47508,7 @@
 	})()}
 
 /***/ },
-/* 279 */
+/* 282 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -47379,7 +47715,7 @@
 	};
 
 /***/ },
-/* 280 */
+/* 283 */
 /***/ function(module, exports) {
 
 	module.exports = "\n<div>\n  <section class=\"content-header\">\n  </section>\n  <section class=\"content\">\n    <box>\n      <div slot=\"title\">\n        配置管理\n      </div>\n      <span slot=\"btn\" @click=\"clickAdd\">添加</span>\n      <div slot=\"body\">\n        <data-table\n          :columns=\"configTable.columns\"\n          :data=\"configTableData.data\"\n          :data-extend=\"configTable.dataExtend\"\n          :opts=\"configTable.opts\"\n          :row-click=\"configTable.rowClick\">\n        </data-table>\n        <pagination :total=\"configTableData.total\" :curr.sync=\"configTableData.cur\" :size=\"configTableData.size\" :page-action='configTable.pageAction'></pagination>\n      </div>\n    </box>\n  </section>\n  <modal :show.sync=\"modal.show\" effect=\"fade\" width=\"400\">\n    <div slot=\"modal-header\" class=\"modal-header\">\n      <h4 class=\"modal-title\">\n        {{modal.title}}\n      </h4>\n    </div>\n    <div slot=\"modal-body\" class=\"modal-body\">\n      <template v-if='modal.type==\"alert\"'>\n        {{modal.message}}\n      </template>\n      <template v-if='modal.type==\"add_config\"'>\n        <form-group :valid.sync=\"modal.add_config.valid\">\n          <bs-input label=\"名称\" :value.sync=\"modal.add_config.name\" required></bs-input>\n          <bs-input label=\"内容\" type=\"detail\" :value.sync=\"modal.add_config.detail\" required></bs-input>\n        </form-group>\n      </template>\n    </div>\n    <div slot=\"modal-footer\" class=\"modal-footer\">\n      <button type=\"button\" class=\"btn btn-default\" @click=\"modal.show = false\">{{modal.cancelText || '取消'}}</button>\n      <button type=\"button\" class=\"btn btn-success\"  :disabled=\"modal.type != 'alert' && !modal.add_config.valid\" @click=\"doSure\">{{modal.sureText || '确定'}}</button>\n    </div>\n  </modal>\n\n</div>\n";

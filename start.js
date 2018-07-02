@@ -8,8 +8,7 @@ const Resource = require('./src/server/router/resource.js');
 const Auth = require('./src/server/auth/main.js');
 const SessionUtil = require('@flyme/skynet-utils/lib/sessionUtil.js');
 const LogUtil = require('@flyme/skynet-utils/lib/logUtil.js');
-
-Service.setOptions('occasional');
+const DbOperate = require('./src/server/utils/db-operate.js');
 
 var server = new Hapi.Server();
 server.connection({
@@ -20,5 +19,7 @@ Resource.init(server);
 Api.init(server);
 Good.init(server);
 SessionUtil.init(server);
+
+// DbOperate.done();
 
 LogUtil.log('start monitor-manage-server success!');

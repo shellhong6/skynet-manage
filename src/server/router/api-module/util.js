@@ -2,7 +2,7 @@ var Service = require('@flyme/skynet-db');
 const Data = require('../../utils/data.js');
 const LogUtil = require('@flyme/skynet-utils/lib/logUtil.js');
 
-Service.setOptions('occasional');
+
 
 module.exports = {
   pageQueryPerDay(data, reply, fnName, type, conditions, sortParams, noFilter){

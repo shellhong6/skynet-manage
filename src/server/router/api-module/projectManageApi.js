@@ -3,7 +3,7 @@ var Service = require('@flyme/skynet-db');
 const LogUtil = require('@flyme/skynet-utils/lib/logUtil.js');
 const SessionUtil = require('@flyme/skynet-utils/lib/sessionUtil.js');
 
-Service.setOptions('occasional');
+
 
 module.exports = {
   dealProject(data, name, state, reply, request){

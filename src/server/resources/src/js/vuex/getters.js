@@ -73,6 +73,9 @@ export const configTableData = state => {
 export const dbTableData = state => {
   return state.dataManage.dbTableData;
 };
+export const coTableData = state => {
+  return state.dataManage.coTableData;
+};
 export const aggregateTableData = state => {
   return state.dataManage.aggregateTableData;
 };
@@ -80,4 +83,7 @@ export const aggregateTableData = state => {
 /*数据库操作*/
 export const batchDbList = state => {
   return state.dataManage.dbTableData;
+};
+export const batchCoList = state => {
+  return state.dataManage.batchCoList;
 };

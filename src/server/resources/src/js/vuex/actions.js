@@ -389,6 +389,22 @@ export const getDbList = ({ dispatch }, data) => {
     }
   }, true);
 };
+export const getCoList = ({ dispatch }, data) => {
+  var url = '/api/co-manage/getCoList';
+  fetch(dispatch, {
+    method: 'POST',
+    data,
+    url: url
+  }, (err, res) => {
+    if (!isErr(err, res, dispatch, url)) {
+      var val = res.value;
+      dispatch(types.GET_CO_LIST, {
+        data: val
+      });
+      dispatchSuccess(res.message, dispatch);
+    }
+  }, true);
+};
 export const getQDbList = ({ dispatch }, data, cb) => {
   var url = '/api/db-manage/getQDbList';
   fetch(dispatch, {
@@ -398,6 +414,21 @@ export const getQDbList = ({ dispatch }, data, cb) => {
   }, (err, res) => {
     if (!isErr(err, res, dispatch, url)) {
       dispatch(types.BATCH_DB_LIST, {
+        data: res.value
+      });
+      cb && cb(res.value);
+    }
+  }, true);
+};
+export const getQCoList = ({ dispatch }, data, cb) => {
+  var url = '/api/co-manage/getQCoList';
+  fetch(dispatch, {
+    method: 'POST',
+    data,
+    url: url
+  }, (err, res) => {
+    if (!isErr(err, res, dispatch, url)) {
+      dispatch(types.BATCH_CO_LIST, {
         data: res.value
       });
       cb && cb(res.value);
@@ -425,6 +456,23 @@ export const doDbDelete = ({ dispatch }, data) => {
     }
   }, true);
 };
+export const doCoDelete = ({ dispatch }, data) => {
+  var url = '/api/co-manage/doCoDelete';
+  fetch(dispatch, {
+    method: 'POST',
+    data: {name: data.entry.name},
+    url: url
+  }, (err, res) => {
+    if (!isErr(err, res, dispatch, url)) {
+      var coTableData = data.coTableData;
+      var entry = data.entry;
+      dispatch(types.GET_CO_LIST, {
+        data: coTableData.data.filter((item) => {return item.name != entry.name;})
+      });
+      dispatchSuccess(res.message, dispatch);
+    }
+  }, true);
+};
 export const batchDbDelete = ({ dispatch }, data) => {
   var url = '/api/db-manage/batchDbDelete';
   fetch(dispatch, {
@@ -444,6 +492,22 @@ export const batchDbDelete = ({ dispatch }, data) => {
         length: dbTableData.data.length - data.entry.length,
         total: Util.autoFormatSize(temp),
         _total: temp
+      });
+      dispatchSuccess(res.message, dispatch);
+    }
+  }, true);
+};
+export const batchCoDelete = ({ dispatch }, data) => {
+  var url = '/api/co-manage/batchCoDelete';
+  fetch(dispatch, {
+    method: 'POST',
+    data:{query: data.query},
+    url: url
+  }, (err, res) => {
+    if (!isErr(err, res, dispatch, url)) {
+      var coTableData = data.coTableData;
+      dispatch(types.GET_CO_LIST, {
+        data: coTableData.data.filter((item) => {return data.query.indexOf(item.name) == -1})
       });
       dispatchSuccess(res.message, dispatch);
     }

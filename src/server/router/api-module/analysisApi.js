@@ -6,7 +6,7 @@ const BaseUtil = require('@flyme/skynet-utils/lib/baseUtil.js');
 const ApiUtil = require('./util.js');
 const LogUtil = require('@flyme/skynet-utils/lib/logUtil.js');
 
-Service.setOptions('occasional');
+
 
 module.exports = {
   dealAnalysis(data, name, state, reply, request){

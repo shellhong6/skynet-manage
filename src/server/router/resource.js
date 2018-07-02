@@ -1,4 +1,5 @@
 var path = require('path');
+var DbOperate = require('../utils/db-operate');
 const PREFIX = '../resources/output/dev';
 
 const getPath = function(url){
@@ -20,6 +21,35 @@ module.exports = {
             }
           }
         });
+        // server.route({
+        //   method: 'GET',
+        //   path: '/login',
+        //   config: {
+        //     auth: 'default',
+        //     handler: function(request, reply) {
+        //       var html = `<!DOCTYPE html>
+        //                   <html lang="en">
+        //                   <head>
+        //                     <meta charset="UTF-8">
+        //                     <title>平台升级提醒</title>
+        //                   </head>
+        //                   <body>
+        //                     <h1>平台正在进行重大升级，请稍后回来！</h1>
+        //                     <div>
+        //                       数据库迁移：${DbOperate.isFinishMove}
+        //                     </div>
+        //                     <div>
+        //                       数据库融合：${DbOperate.isFinishMerge}
+        //                     </div>
+        //                   </body>
+        //                   </html>
+        //                 `;
+        //       var response = reply.response(html);
+        //       response.header('Content-Type', 'text/html');
+        //       return response;
+        //     }
+        //   }
+        // });
         server.route({
           method: 'GET',
           path: '/login',

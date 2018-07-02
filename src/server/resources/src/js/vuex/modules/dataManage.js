@@ -1,7 +1,9 @@
 import {
   GET_CODE_STATUS,
   GET_DB_LIST,
+  GET_CO_LIST,
   DO_AGGREGATE,
+  BATCH_CO_LIST,
   BATCH_DB_LIST
 } from '../mutation-types';
 
@@ -11,8 +13,10 @@ const state = {
     link: ''
   },
   dbTableData: [],
+  coTableData: [],
   aggregateTableData: [],
-  batchDbList: []
+  batchDbList: [],
+  batchCoList: []
 };
 
 const mutations = {
@@ -21,6 +25,12 @@ const mutations = {
   },
   [GET_DB_LIST] (state, value) {
     state.dbTableData = value;
+  },
+  [BATCH_CO_LIST] (state, value) {
+    state.batchCoList = value;
+  },
+  [GET_CO_LIST] (state, value) {
+    state.coTableData = value;
   },
   [BATCH_DB_LIST] (state, value) {
     state.batchDbList = value;

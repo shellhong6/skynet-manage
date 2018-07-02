@@ -4,7 +4,7 @@ var Service = require('@flyme/skynet-db');
 const md5 = require('md5');
 const BaseUtil = require('../../utils/base.js')
 
-Service.setOptions('occasional');
+
 
 module.exports = {
   dealLogin(data, name, state, reply, request){

@@ -5,7 +5,7 @@ const SessionUtil = require('@flyme/skynet-utils/lib/sessionUtil.js');
 const LogUtil = require('@flyme/skynet-utils/lib/logUtil.js');
 const Data = require('../../utils/data.js');
 
-Service.setOptions('occasional');
+
 
 module.exports = {
   dealCodeManage(data, name, state, reply, request){

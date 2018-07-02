@@ -35,3 +35,6 @@ export const GET_PAGES = 'GET_PAGES';
 export const GET_DB_LIST = 'GET_DB_LIST';
 export const BATCH_DB_LIST = 'BATCH_DB_LIST';
 export const DO_AGGREGATE = 'DO_AGGREGATE';
+
+export const GET_CO_LIST = 'GET_CO_LIST';
+export const BATCH_CO_LIST = 'BATCH_CO_LIST';

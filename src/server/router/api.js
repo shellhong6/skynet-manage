@@ -17,6 +17,9 @@ module.exports = {
       case 'db-manage':
         Apis.dbManageApi.dealDb(data, name, state, reply, request);
         break;
+      case 'co-manage':
+        Apis.coManageApi.dealCo(data, name, state, reply, request);
+        break;
       case 'user':
         Apis.userApi.dealUser(data, name, state, reply, request);
         break;

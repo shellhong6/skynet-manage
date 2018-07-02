@@ -28,6 +28,11 @@ const PROJECT_MENU = {
       icon: '',
     },
     {
+      title: '集合管理',
+      url: '/co-manage',
+      icon: '',
+    },
+    {
       title: 'aggregate管理',
       url: '/aggregate-manage',
       icon: '',
